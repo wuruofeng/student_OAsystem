@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.mapper.ArticleMapper">
+
+
+  <resultMap id="BaseResultMap" type="com.system.po.Article">
+    <id column="arcid" jdbcType="BIGINT" property="arcid" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="arctime" jdbcType="TIMESTAMP" property="arctime" />
+    <result column="arcatatus" jdbcType="VARCHAR" property="arcatatus" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.system.po.ArticleWithBLOBs">
+    <result column="archtml" jdbcType="LONGVARCHAR" property="archtml" />
+    <result column="title" jdbcType="LONGVARCHAR" property="title" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="imageurl" jdbcType="LONGVARCHAR" property="imageurl" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    arcid, userid, arctime, arcatatus
+  </sql>
+  <sql id="Blob_Column_List">
+    archtml, title, content, imageurl
+  </sql>
+  
+  <select id="findByPaging" parameterType="PagingVO" resultType="ArticleWithBLOBs">
+        select * from article
+        limit #{toPageNo}, #{pageSize}
+  </select>
+  
+  <select id="selectByExampleWithBLOBs" parameterType="com.system.po.ArticleExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.system.po.ArticleExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    where arcid = #{arcid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from article
+    where arcid = #{arcid,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.system.po.ArticleExample">
+    delete from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.system.po.ArticleWithBLOBs">
+    insert into article (arcid, userid, arctime, 
+      arcatatus, archtml, title, 
+      content, imageurl)
+    values (#{arcid,jdbcType=BIGINT}, #{userid,jdbcType=VARCHAR}, #{arctime,jdbcType=TIMESTAMP}, 
+      #{arcatatus,jdbcType=VARCHAR}, #{archtml,jdbcType=LONGVARCHAR}, #{title,jdbcType=LONGVARCHAR}, 
+      #{content,jdbcType=LONGVARCHAR}, #{imageurl,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.system.po.ArticleWithBLOBs">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="arcid != null">
+        arcid,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="arctime != null">
+        arctime,
+      </if>
+      <if test="arcatatus != null">
+        arcatatus,
+      </if>
+      <if test="archtml != null">
+        archtml,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="imageurl != null">
+        imageurl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="arcid != null">
+        #{arcid,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="arctime != null">
+        #{arctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arcatatus != null">
+        #{arcatatus,jdbcType=VARCHAR},
+      </if>
+      <if test="archtml != null">
+        #{archtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="imageurl != null">
+        #{imageurl,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.system.po.ArticleExample" resultType="java.lang.Long">
+    select count(*) from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article
+    <set>
+      <if test="record.arcid != null">
+        arcid = #{record.arcid,jdbcType=BIGINT},
+      </if>
+      <if test="record.userid != null">
+        userid = #{record.userid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.arctime != null">
+        arctime = #{record.arctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.arcatatus != null">
+        arcatatus = #{record.arcatatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.archtml != null">
+        archtml = #{record.archtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.imageurl != null">
+        imageurl = #{record.imageurl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update article
+    set arcid = #{record.arcid,jdbcType=BIGINT},
+      userid = #{record.userid,jdbcType=VARCHAR},
+      arctime = #{record.arctime,jdbcType=TIMESTAMP},
+      arcatatus = #{record.arcatatus,jdbcType=VARCHAR},
+      archtml = #{record.archtml,jdbcType=LONGVARCHAR},
+      title = #{record.title,jdbcType=LONGVARCHAR},
+      content = #{record.content,jdbcType=LONGVARCHAR},
+      imageurl = #{record.imageurl,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article
+    set arcid = #{record.arcid,jdbcType=BIGINT},
+      userid = #{record.userid,jdbcType=VARCHAR},
+      arctime = #{record.arctime,jdbcType=TIMESTAMP},
+      arcatatus = #{record.arcatatus,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.system.po.ArticleWithBLOBs">
+    update article
+    <set>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="arctime != null">
+        arctime = #{arctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arcatatus != null">
+        arcatatus = #{arcatatus,jdbcType=VARCHAR},
+      </if>
+      <if test="archtml != null">
+        archtml = #{archtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="imageurl != null">
+        imageurl = #{imageurl,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where arcid = #{arcid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.system.po.ArticleWithBLOBs">
+    update article
+    set userid = #{userid,jdbcType=VARCHAR},
+      arctime = #{arctime,jdbcType=TIMESTAMP},
+      arcatatus = #{arcatatus,jdbcType=VARCHAR},
+      archtml = #{archtml,jdbcType=LONGVARCHAR},
+      title = #{title,jdbcType=LONGVARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR},
+      imageurl = #{imageurl,jdbcType=LONGVARCHAR}
+    where arcid = #{arcid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.system.po.Article">
+    update article
+    set userid = #{userid,jdbcType=VARCHAR},
+      arctime = #{arctime,jdbcType=TIMESTAMP},
+      arcatatus = #{arcatatus,jdbcType=VARCHAR}
+    where arcid = #{arcid,jdbcType=BIGINT}
+  </update>
+</mapper>
